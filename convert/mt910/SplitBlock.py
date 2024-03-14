@@ -1,5 +1,6 @@
 import re
-from tree.mt910 import *
+from tree.mt910.Header import *
+from tree.mt910.Body import *
 
 
 def splitBlock1(line):
@@ -13,12 +14,7 @@ def splitBlock1(line):
     BIC12 = block1[0][5:17]
     sessionDigit = block1[0][17:21]
     sequenceDigit = block1[0][21:27]
-    print(len(block1))
-    print('1. Application ID: ' + appID + '\n' +
-          '2. Service ID: ' + serviceID + '\n' +
-          '3. Business Identify Code: ' + BIC12 + '\n' +
-          '4. Session Digit: ' + sessionDigit + '\n' +
-          '5. Sequence Digit: ' + sequenceDigit)
+    header_b2111.text = BIC12.strip()
 
 
 def splitBlock2(line):
@@ -35,12 +31,7 @@ def splitBlock2(line):
             priority = i[18:19]
             deliver = i[19:20]
             period = i[20:22]
-            print('1. Application Header ID: ' + appHeader + '\n' +
-                  '2. Message Type: ' + msgType + '\n' +
-                  '3. Business Identify Code: ' + BIC12 + '\n' +
-                  '4. Priority Code: ' + priority + '\n' +
-                  '5. Delivery Monitoring: ' + deliver + '\n' +
-                  '6. Obsolescence Period: ' + period)
+            header_b1111.text = BIC12.strip()
         elif i[2:3] == 'O':
             appHeader = i[2:3]
             msgType = i[3:6]
@@ -52,16 +43,7 @@ def splitBlock2(line):
             outDate = i[38:44]
             outTime = i[44:48]
             priority = i[-1:]
-            print('1. Application Header ID: ' + appHeader + '\n' +
-                  '2. Message Type: ' + msgType + '\n' +
-                  '3. Input Time: ' + inTime + '\n' +
-                  '4. Input Date: ' + inDate + '\n' +
-                  '5. Business Identify Code: ' + BIC12 + '\n' +
-                  '6. Session Digit: ' + sessionDigit + '\n' +
-                  '7. Sequence Digit: ' + sequenceDigit + '\n' +
-                  '8. Output Date: ' + outDate + '\n' +
-                  '9. Output Time: ' + outTime + '\n' +
-                  '10. Priority Code: ' + priority)
+            header_b1111.text = BIC12.strip()
 
 
 def splitBlock3(line):
@@ -76,70 +58,87 @@ def splitBlock3(line):
     for i in block3:
         if i[0:3] == '103':
             serviceId = i[4:7]
-            print('103 - Service Identifier: ' + serviceId)
         elif i[0:3] == '113':
             bankPrty = i[4:8]
-            print('113 - Banking Priority: ' + bankPrty)
         elif i[0:3] == '108':
             MUR = i[4:20]
-            print('108 - Message User Reference: ' + MUR)
         elif i[0:3] == '119':
             valFlag = i[4:12]
-            print('119 - Validation Flag: ' + valFlag)
         elif i[0:3] == '423':
             balDttm = i[4:18]
-            print('423 - Balance checkpoint date and time: ' + balDttm)
         elif i[0:3] == '106':
             date = i[0:5]
             BIC12 = i[5:17]
             sessionDigit = i[17:21]
             sequenceDigit = i[21:27]
-            print('106 - 1. Date: ' + date + '\n' +
-                  '2. Business Identify Code: ' + BIC12 + '\n' +
-                  '3. Session Digit: ' + sessionDigit + '\n' +
-                  '4. Sequence Digit' + sequenceDigit)
         elif i[0:3] == '424':
             relRef = i[4:20]
-            print('424 - Related reference: ' + relRef)
         elif i[0:3] == '111':
             serviceId = i[4:7]
-            print('111 - Service type identifier: ' + serviceId)
         elif i[0:3] == '121':
             transRef = i[4:]
-            print('121 - Unique end-to-end transaction reference: ' + transRef)
         elif i[0:3] == '115':
             addressInfo = i[4:36]
-            print('115 - Addressee Information: ' + addressInfo)
         elif i[0:3] == '165':
             paymentInfo = i[5:8]
             adtnInfo = i[9:]
-            print('165 - 1. Payment release information receiver : ' + paymentInfo)
-            print('2. Additional Information: ' + adtnInfo)
         elif i[0:3] == '433':
             srceenInfo = i[5:8]
             adtnInfo = i[9:]
-            print('433 - 1. Payment release information receiver : ' + srceenInfo)
-            print('2. Additional Information: ' + adtnInfo)
         elif i[0:3] == '434':
             paymentInfo = i[5:8]
             adtnInfo = i[9:]
-            print('434 - 1. Payment release information receiver : ' + paymentInfo)
-            print('2. Additional Information: ' + adtnInfo)
 
 
 def splitBlock4(line):
-    tags = ['13D', '20', '21', '25a', '32A',
-            '50a', '52a', '56a', '72']
+    tags = ['13D', '20:', '21:', '25:', '32A',
+            '50A', '52A', '56A', '72:']
     characters = ['{', ':', '-']
     block4 = []
-
     for i in line:
         if i[1:4] in tags:
             block4.append(i[:])
         elif i[0] not in characters:
             if len(block4) != 0:
                 block4[-1] += i
-
+    for i in block4:
+        if i[1:4] == '20:':
+            msgId = i[4:]
+            header_b3.text = msgId.strip()
+            doc_b11.text = msgId.strip()
+            doc_b21.text = msgId.strip()
+            doc_b231.text = msgId.strip()
+        elif i[1:4] == '21:':
+            receiverRef = i[4:]
+            doc_b238111.text = receiverRef.strip()
+        elif i[1:4] == '25:':
+            accCode = i[4:]
+            doc_b22111.text = accCode.strip()
+        elif i[1:4] == '13D':
+            datetime = ('20' + i[5:7]
+                        + '-' + i[7:9]
+                        + '-' + i[9:11]
+                        + 'T' + i[11:13]
+                        + ':' + i[13:15]
+                        + ':00.000' + i[15:18]
+                        + ':' + i[18:20])
+            doc_b2351.text = datetime.strip()
+        elif i[1:4] == '32A':
+            date = ('20' + i[5:7]
+                    + '-' + i[7:9]
+                    + '-' + i[9:11])
+            currency = i[11:14]
+            amount = i[14:-1]
+            doc_b2361.text = date.strip()
+            doc_b238161.text = date.strip()
+            doc_b222.text = currency.strip()
+            doc_b232.text = amount.strip()
+            doc_b232.set('Ccy', currency)
+            doc_b23812.text = amount.strip()
+            doc_b23812.set('Ccy', currency)
+        elif i[1:4] == '72:':
+            additionalInfo = i[4:]
+            doc_b24.text = additionalInfo.replace('\n', '')
 
 def splitBlock5(line):
     block5 = re.findall(r'{([^{}]+)}', line[-1])
