@@ -91,30 +91,30 @@ def splitBlock3(line):
 
 
 def splitBlock4(line):
-    tags = ['13D', '20:', '21:', '25:', '32A',
-            '50A', '52A', '56A', '72:']
+    tags = ['13', '20', '21', '25', '32',
+            '50', '52', '56', '72']
     characters = ['{', ':', '-']
     block4 = []
     for i in line:
-        if i[1:4] in tags:
+        if i[1:3] in tags:
             block4.append(i[:])
         elif i[0] not in characters:
             if len(block4) != 0:
                 block4[-1] += i
     for i in block4:
-        if i[1:4] == '20:':
+        if i[1:3] == '20':
             msgId = i[4:]
             header_b3.text = msgId.strip()
             doc_b11.text = msgId.strip()
             doc_b21.text = msgId.strip()
             doc_b231.text = msgId.strip()
-        elif i[1:4] == '21:':
+        elif i[1:3] == '21':
             receiverRef = i[4:]
             doc_b238111.text = receiverRef.strip()
-        elif i[1:4] == '25:':
+        elif i[1:3] == '25':
             accCode = i[4:]
             doc_b22111.text = accCode.strip()
-        elif i[1:4] == '13D':
+        elif i[1:3] == '13':
             datetime = ('20' + i[5:7]
                         + '-' + i[7:9]
                         + '-' + i[9:11]
@@ -123,12 +123,12 @@ def splitBlock4(line):
                         + ':00.000' + i[15:18]
                         + ':' + i[18:20])
             doc_b2351.text = datetime.strip()
-        elif i[1:4] == '32A':
+        elif i[1:3] == '32':
             date = ('20' + i[5:7]
                     + '-' + i[7:9]
                     + '-' + i[9:11])
             currency = i[11:14]
-            amount = i[14:-1]
+            amount = i[14:-2]
             doc_b2361.text = date.strip()
             doc_b238161.text = date.strip()
             doc_b222.text = currency.strip()
@@ -136,9 +136,132 @@ def splitBlock4(line):
             doc_b232.set('Ccy', currency)
             doc_b23812.text = amount.strip()
             doc_b23812.set('Ccy', currency)
-        elif i[1:4] == '72:':
+        elif i[1:3] == '50':
+            if i[3:4] == 'A':
+                doc_b238141 = ET.SubElement(doc_b23814, 'Dbtr')
+                doc_b2381411 = ET.SubElement(doc_b238141, 'Pty')
+                doc_b23814111 = ET.SubElement(doc_b2381411, 'Id')
+                doc_b238141111 = ET.SubElement(doc_b23814111, 'OrgId')
+                doc_b2381411111 = ET.SubElement(doc_b238141111, 'AnyBIC')
+                doc_b238142 = ET.SubElement(doc_b23814, 'DbtrAcct')
+                doc_b2381421 = ET.SubElement(doc_b238142, 'Id')
+                doc_b23814211 = ET.SubElement(doc_b2381421, 'Othr')
+                doc_b238142111 = ET.SubElement(doc_b23814211, 'Id')
+                splitPart = i.split("\n")
+                accountId = splitPart[0].split(":")[2]
+                idCode = splitPart[1]
+                doc_b2381411111.text = idCode.strip()
+                doc_b238142111.text = accountId.strip()
+            elif i[3:4] == 'F':
+                doc_b238141 = ET.SubElement(doc_b23814, 'Dbtr')
+                doc_b2381411 = ET.SubElement(doc_b238141, 'Pty')
+                doc_b23814111 = ET.SubElement(doc_b2381411, 'Nm')
+                doc_b23814112 = ET.SubElement(doc_b2381411, 'PstlAdr')
+                doc_b238141121 = ET.SubElement(doc_b23814112, 'TwnNm')
+                doc_b238141122 = ET.SubElement(doc_b23814112, 'Ctry')
+                doc_b238141123 = ET.SubElement(doc_b23814112, 'AdrLine')
+                doc_b23814113 = ET.SubElement(doc_b2381411, 'Id')
+                doc_b238141131 = ET.SubElement(doc_b23814113, 'PrvtId')
+                doc_b2381411311 = ET.SubElement(doc_b238141131, 'DtAndPlcOfBirth')
+                doc_b23814113111 = ET.SubElement(doc_b2381411311, 'BirthDt')
+                doc_b23814113112 = ET.SubElement(doc_b2381411311, 'CityOfBirth')
+                doc_b23814113113 = ET.SubElement(doc_b2381411311, 'CtryOfBirth')
+                doc_b238141132 = ET.SubElement(doc_b23814113, 'Othr')
+                doc_b2381411321 = ET.SubElement(doc_b238141132, 'Id')
+                doc_b2381411322 = ET.SubElement(doc_b238141132, 'SchmeNm')
+                doc_b23814113221 = ET.SubElement(doc_b2381411322, 'Cd')
+                doc_b2381411323 = ET.SubElement(doc_b238141132, 'Issr')
+                doc_b238141133 = ET.SubElement(doc_b23814113, 'Othr')
+                doc_b2381411331 = ET.SubElement(doc_b238141133, 'Id')
+                doc_b2381411332 = ET.SubElement(doc_b2381411331, 'SchmeNm')
+                doc_b23814113321 = ET.SubElement(doc_b2381411332, 'Cd')
+                doc_b238142 = ET.SubElement(doc_b23814, 'DbtrAcct')
+                doc_b2381421 = ET.SubElement(doc_b238142, 'Id')
+                doc_b23814211 = ET.SubElement(doc_b2381421, 'IBAN')
+                doc_b238142111 = ET.SubElement(doc_b23814211, 'Id')
+                doc_b23814212 = ET.SubElement(doc_b2381421, 'Othr')
+                doc_b238142121 = ET.SubElement(doc_b23814212, 'Id')
+                splitPart1 = i.split("\n")
+                partyIdentifier = splitPart1[0].split(":")[2]
+                splitPart2 = partyIdentifier.split('/')
+                idCode = splitPart1[1]
+                parID = splitPart2[2]
+
+        elif i[1:3] == '52':
+            if i[3:4] == 'A':
+                doc_b23815111 = ET.SubElement(doc_b2381511, 'BICFI')
+                doc_b23815112 = ET.SubElement(doc_b2381511, 'Othr')
+                doc_b238151121 = ET.SubElement(doc_b23815112, 'Id')
+                splitPart1 = i.split("\n")
+                partyIdentifier = splitPart1[0].split(":")[2]
+                splitPart2 = partyIdentifier.split('/')
+                idCode = splitPart1[1]
+                partyID = splitPart2[2]
+                doc_b23815111.text = partyID.strip()
+                doc_b238151121.text = idCode.strip()
+            elif i[3:4] == 'D':
+                doc_b23815111 = ET.SubElement(doc_b2381511, 'Nm')
+                doc_b23815112 = ET.SubElement(doc_b2381511, 'PstlAdr')
+                doc_b238151121 = ET.SubElement(doc_b23815112, 'AdrLine')
+                doc_b238151122 = ET.SubElement(doc_b23815112, 'AdrLine')
+                doc_b238151123 = ET.SubElement(doc_b23815112, 'AdrLine')
+                doc_b23815113 = ET.SubElement(doc_b2381511, 'Othr')
+                doc_b238151131 = ET.SubElement(doc_b23815113, 'Id')
+                splitPart1 = i.split("\n")
+                partyIdentifier = splitPart1[0].split(":")[2]
+                splitPart2 = partyIdentifier.split('/')
+                for j, part in enumerate(splitPart1):
+                    if j == 1:
+                        name = part if part else None
+                        doc_b23815111.text = name
+                    elif j == 2:
+                        address1 = part if part else None
+                        doc_b238151121.text = address1
+                    elif j == 3:
+                        address2 = part if part else None
+                        doc_b238151122.text = address2
+                    elif j == 4:
+                        address3 = part if part else None
+                        doc_b238151123.text = address3
+                partyID = splitPart2[2]
+                doc_b238151131.text = partyID
+        elif i[1:3] == '56':
+            if i[3:4] == 'A':
+                doc_b23815211 = ET.SubElement(doc_b2381521, 'BICFI')
+                doc_b23815212 = ET.SubElement(doc_b2381521, 'Othr')
+                doc_b238152121 = ET.SubElement(doc_b23815212, 'Id')
+                splitPart1 = i.split("\n")
+                partyIdentifier = splitPart1[0].split(":")[2]
+                splitPart2 = partyIdentifier.split('/')
+                idCode = splitPart1[1]
+                partyID = splitPart2[2]
+                doc_b23815211.text = partyID.strip()
+                doc_b238152121.text = idCode.strip()
+            elif i[3:4] == 'D':
+                doc_b23815211 = ET.SubElement(doc_b2381521, 'Nm')
+                doc_b23815212 = ET.SubElement(doc_b2381521, 'PstlAdr')
+                doc_b238152121 = ET.SubElement(doc_b23815212, 'AdrLine')
+                doc_b238152122 = ET.SubElement(doc_b23815212, 'AdrLine')
+                doc_b238152123 = ET.SubElement(doc_b23815212, 'AdrLine')
+                doc_b23815213 = ET.SubElement(doc_b2381521, 'Othr')
+                doc_b23815231 = ET.SubElement(doc_b23815213, 'Id')
+                splitPart1 = i.split("\n")
+                partyIdentifier = splitPart1[0].split(":")[2]
+                splitPart2 = partyIdentifier.split('/')
+                name = splitPart1[1]
+                address1 = splitPart1[2]
+                address2 = splitPart1[3]
+                address3 = splitPart1[4]
+                partyID = splitPart2[2]
+                doc_b23815231.text = partyID.strip()
+                doc_b238152121.text = address1
+                doc_b238152122.text = address2
+                doc_b238152123.text = address3
+                doc_b23815211.text = name
+        elif i[1:3] == '72':
             additionalInfo = i[4:]
             doc_b24.text = additionalInfo.replace('\n', '')
+
 
 def splitBlock5(line):
     block5 = re.findall(r'{([^{}]+)}', line[-1])
