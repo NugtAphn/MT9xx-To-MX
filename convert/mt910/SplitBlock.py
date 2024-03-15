@@ -48,7 +48,14 @@ def splitBlock2(line):
             outDate = i[38:44]
             outTime = i[44:48]
             priority = i[-1:]
+
             header_b1111.text = BIC12.strip()
+
+            if priority == 'U':
+                header_b7.text = 'HIGH'
+            elif priority == 'N':
+                header_b7.text = 'NORM'
+
 
 
 def splitBlock3(line):
@@ -141,8 +148,17 @@ def splitBlock4(line):
                 doc_b22111.text = accCode.strip()
 
             elif i[3:4] == 'P':
-                accCode = i[4:]
-                doc_b22111.text = accCode.strip()
+                doc_b223 = ET.SubElement(doc_b22, 'Ownr')
+                doc_b2231 = ET.SubElement(doc_b223, 'Id')
+                doc_b22311 = ET.SubElement(doc_b2231, 'OrgId')
+                doc_b223111 = ET.SubElement(doc_b22311, 'AnyBIC')
+
+                splitPart = i.split("\n")
+                ID = splitPart[0].split(":")[2]
+                IDCode = splitPart[1]
+
+                doc_b22111.text = ID.strip()
+                doc_b223111.text = IDCode.strip()
 
         elif i[1:3] == '13':
             datetime = ('20' + i[5:7]
@@ -152,6 +168,7 @@ def splitBlock4(line):
                         + ':' + i[13:15]
                         + ':00.000' + i[15:18]
                         + ':' + i[18:20])
+
             doc_b2351.text = datetime.strip()
 
         elif i[1:3] == '32':
@@ -160,6 +177,7 @@ def splitBlock4(line):
                     + '-' + i[9:11])
             currency = i[11:14]
             amount = i[14:-1]
+
             doc_b2361.text = date.strip()
             doc_b238161.text = date.strip()
             doc_b222.text = currency.strip()
@@ -179,9 +197,11 @@ def splitBlock4(line):
                 doc_b2381421 = ET.SubElement(doc_b238142, 'Id')
                 doc_b23814211 = ET.SubElement(doc_b2381421, 'Othr')
                 doc_b238142111 = ET.SubElement(doc_b23814211, 'Id')
+
                 splitPart = i.split("\n")
                 accountId = splitPart[0].split(":")[2]
                 idCode = splitPart[1]
+
                 doc_b2381411111.text = idCode.strip()
                 doc_b238142111.text = accountId.strip()
 
@@ -197,9 +217,11 @@ def splitBlock4(line):
                 doc_b2381421 = ET.SubElement(doc_b238142, 'Id')
                 doc_b23814211 = ET.SubElement(doc_b2381421, 'Othr')
                 doc_b238141111 = ET.SubElement(doc_b23814211, 'Id')
+
                 splitPart1 = i.split("\n")
-                partyIdentifier = splitPart1[0].split(":")[2]
-                splitPart2 = partyIdentifier.split('/')
+                line1 = splitPart1[0].split(":")[2]
+                splitPart2 = line1.split('/')
+
                 ID = splitPart2[1]
                 doc_b238141111.text = ID.strip()
 
@@ -249,6 +271,7 @@ def splitBlock4(line):
                 doc_b238142111 = ET.SubElement(doc_b23814211, 'Id')
                 doc_b23814212 = ET.SubElement(doc_b2381421, 'Othr')
                 doc_b238142121 = ET.SubElement(doc_b23814212, 'Id')
+
                 splitPart1 = i.split('\n')
                 line1 = splitPart1[0].split(':')[2]
                 line2 = splitPart1[1]
@@ -262,9 +285,11 @@ def splitBlock4(line):
                 doc_b23815111 = ET.SubElement(doc_b2381511, 'BICFI')
                 doc_b23815112 = ET.SubElement(doc_b2381511, 'Othr')
                 doc_b238151121 = ET.SubElement(doc_b23815112, 'Id')
+
                 splitPart1 = i.split("\n")
-                partyIdentifier = splitPart1[0].split(":")[2]
-                splitPart2 = partyIdentifier.split('/')
+                line1 = splitPart1[0].split(":")[2]
+                splitPart2 = line1.split('/')
+
                 idCode = splitPart1[1]
 
                 for j, part in enumerate(splitPart2):
@@ -282,9 +307,10 @@ def splitBlock4(line):
                 doc_b238151123 = ET.SubElement(doc_b23815112, 'AdrLine')
                 doc_b23815113 = ET.SubElement(doc_b2381511, 'Othr')
                 doc_b238151131 = ET.SubElement(doc_b23815113, 'Id')
+
                 splitPart1 = i.split("\n")
-                partyIdentifier = splitPart1[0].split(":")[2]
-                splitPart2 = partyIdentifier.split('/')
+                line1 = splitPart1[0].split(":")[2]
+                splitPart2 = line1.split('/')
 
                 for j, part in enumerate(splitPart1):
                     if j == 1:
@@ -304,6 +330,7 @@ def splitBlock4(line):
                         doc_b238151123.text = address3
 
                 partyID = splitPart2[2]
+
                 doc_b238151131.text = partyID
 
         elif i[1:3] == '56':
@@ -311,9 +338,11 @@ def splitBlock4(line):
                 doc_b23815211 = ET.SubElement(doc_b2381521, 'BICFI')
                 doc_b23815212 = ET.SubElement(doc_b2381521, 'Othr')
                 doc_b238152121 = ET.SubElement(doc_b23815212, 'Id')
+
                 splitPart1 = i.split("\n")
-                partyIdentifier = splitPart1[0].split(":")[2]
-                splitPart2 = partyIdentifier.split('/')
+                line1 = splitPart1[0].split(":")[2]
+                splitPart2 = line1.split('/')
+
                 idCode = splitPart1[1]
 
                 for j, part in enumerate(splitPart2):
@@ -331,19 +360,22 @@ def splitBlock4(line):
                 doc_b238152123 = ET.SubElement(doc_b23815212, 'AdrLine')
                 doc_b23815213 = ET.SubElement(doc_b2381521, 'Othr')
                 doc_b23815231 = ET.SubElement(doc_b23815213, 'Id')
+
                 splitPart1 = i.split("\n")
-                partyIdentifier = splitPart1[0].split(":")[2]
-                splitPart2 = partyIdentifier.split('/')
+                line1 = splitPart1[0].split(":")[2]
+                splitPart2 = line1.split('/')
+
                 name = splitPart1[1]
                 address1 = splitPart1[2]
                 address2 = splitPart1[3]
                 address3 = splitPart1[4]
                 partyID = splitPart2[2]
-                doc_b23815231.text = partyID.strip()
+
+                doc_b23815211.text = name
                 doc_b238152121.text = address1
                 doc_b238152122.text = address2
                 doc_b238152123.text = address3
-                doc_b23815211.text = name
+                doc_b23815231.text = partyID
 
         elif i[1:3] == '72':
             additionalInfo = i[4:]
@@ -357,37 +389,37 @@ def splitBlock5(line):
         if i[0:3] == 'CHK':
             checkSum = i[4:]
 
-        elif i[0:2] == 'TNG':
-            msg = i[3:]
+        elif i[0:3] == 'TNG':
+            msg = i[4:]
 
-        elif i[0:2] == 'PDE':
-            time = i[3:7]
-            date = i[7:13]
-            BIC12 = i[13:25]
-            sessionDigit = i[25:29]
-            sequenceDigit = i[29:35]
+        elif i[0:3] == 'PDE':
+            time = i[4:8]
+            date = i[8:14]
+            BIC12 = i[14:26]
+            sessionDigit = i[26:30]
+            sequenceDigit = i[30:36]
 
-        elif i[0:2] == 'DLM':
-            msg = i[3:]
+        elif i[0:3] == 'DLM':
+            msg = i[4:]
 
-        elif i[0:2] == 'MRF':
-            date1 = i[3:9]
-            time = i[9:13]
-            date2 = i[13:19]
-            BIC12 = i[19:31]
-            sessionDigit = i[31:35]
-            sequenceDigit = i[35:41]
+        elif i[0:3] == 'MRF':
+            date1 = i[4:10]
+            time = i[10:14]
+            date2 = i[14:20]
+            BIC12 = i[20:32]
+            sessionDigit = i[32:36]
+            sequenceDigit = i[36:42]
 
-        elif i[0:2] == 'PDM':
-            time = i[3:7]
-            date = i[7:13]
-            BIC12 = i[13:25]
-            sessionDigit = i[25:29]
-            sequenceDigit = i[29:35]
+        elif i[0:3] == 'PDM':
+            time = i[4:8]
+            date = i[8:14]
+            BIC12 = i[14:26]
+            sessionDigit = i[26:30]
+            sequenceDigit = i[30:36]
 
-        elif i[0:2] == 'SYS':
-            time = i[3:7]
-            date = i[7:13]
-            BIC12 = i[13:25]
-            sessionDigit = i[25:29]
-            sequenceDigit = i[29:35]
+        elif i[0:3] == 'SYS':
+            time = i[4:8]
+            date = i[8:14]
+            BIC12 = i[14:26]
+            sessionDigit = i[26:30]
+            sequenceDigit = i[30:36]

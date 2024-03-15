@@ -1,6 +1,5 @@
 import xml.dom.minidom
 import datetime
-import pytz
 from tkinter import *
 from tkinter import filedialog
 from convert.mt910.SplitBlock import *
@@ -22,9 +21,8 @@ def mapping():
     splitBlock4(line)
     splitBlock5(line)
 
-    timezone = pytz.timezone('Etc/GMT+7')
-    currentTime = datetime.datetime.now(timezone)
-    formattedTime = currentTime.strftime("%Y-%m-%dT%H:%M:%S.%f%z")
+    currentTime = datetime.datetime.now()
+    formattedTime = currentTime.strftime("%Y-%m-%dT%H:%M:%S.%f")
 
     header.set('xmlns', "urn:iso:std:iso:20022:tech:xsd:head.001.001.02")
     doc.set('xmlns', "urn:iso:std:iso:20022:tech:xsd:camt.054.001.08")
@@ -36,11 +34,14 @@ def mapping():
 
     xml_header = ET.tostring(header, encoding="utf-8", xml_declaration=True).decode('utf-8')
     xml_doc = ET.tostring(doc, encoding="utf-8", xml_declaration=True).decode('utf-8')
+
     dom1 = xml.dom.minidom.parseString(xml_header)
     dom2 = xml.dom.minidom.parseString(xml_doc)
+
     header_xml = dom1.toprettyxml(indent="  ")
     doc_xml = dom2.toprettyxml(indent="  ")
-    with open("new_file.xml", "w") as file:
+
+    with open("acmt.054.001.08.xml", "w") as file:
         file.write(header_xml + '\n' + doc_xml)
 
 
