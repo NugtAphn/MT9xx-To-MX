@@ -6,9 +6,11 @@ from tree.mt910.Body import *
 def splitBlock1(line):
     lstLine = re.findall(r'{([^{}]+)}', line[0])
     block1 = []
+
     for i in lstLine:
         if i[0:2] == '1:':
             block1.append(i[:])
+
     appID = block1[0][2:3]
     serviceID = block1[0][3:5]
     BIC12 = block1[0][5:17]
@@ -20,9 +22,11 @@ def splitBlock1(line):
 def splitBlock2(line):
     lstLine = re.findall(r'{([^{}]+)}', line[0])
     block2 = []
+
     for i in lstLine:
         if i[0:2] == '2:':
             block2.append(i[:])
+
     for i in block2:
         if i[2:3] == 'I':
             appHeader = i[2:3]
@@ -32,6 +36,7 @@ def splitBlock2(line):
             deliver = i[19:20]
             period = i[20:22]
             header_b1111.text = BIC12.strip()
+
         elif i[2:3] == 'O':
             appHeader = i[2:3]
             msgType = i[3:6]
@@ -52,39 +57,53 @@ def splitBlock3(line):
             '165', '433', '434']
     lstLine = re.findall(r'{([^{}]+)}', line[0])
     block3 = []
+
     for i in lstLine:
         if i[0:3] in tags:
             block3.append(i[:])
+
     for i in block3:
         if i[0:3] == '103':
             serviceId = i[4:7]
+
         elif i[0:3] == '113':
             bankPrty = i[4:8]
+
         elif i[0:3] == '108':
             MUR = i[4:20]
+
         elif i[0:3] == '119':
             valFlag = i[4:12]
+
         elif i[0:3] == '423':
             balDttm = i[4:18]
+
         elif i[0:3] == '106':
             date = i[0:5]
             BIC12 = i[5:17]
             sessionDigit = i[17:21]
             sequenceDigit = i[21:27]
+
         elif i[0:3] == '424':
             relRef = i[4:20]
+
         elif i[0:3] == '111':
             serviceId = i[4:7]
+
         elif i[0:3] == '121':
             transRef = i[4:]
+
         elif i[0:3] == '115':
             addressInfo = i[4:36]
+
         elif i[0:3] == '165':
             paymentInfo = i[5:8]
             adtnInfo = i[9:]
+
         elif i[0:3] == '433':
             srceenInfo = i[5:8]
             adtnInfo = i[9:]
+
         elif i[0:3] == '434':
             paymentInfo = i[5:8]
             adtnInfo = i[9:]
@@ -95,12 +114,15 @@ def splitBlock4(line):
             '50', '52', '56', '72']
     characters = ['{', ':', '-']
     block4 = []
+
     for i in line:
         if i[1:3] in tags:
             block4.append(i[:])
+
         elif i[0] not in characters:
             if len(block4) != 0:
                 block4[-1] += i
+
     for i in block4:
         if i[1:3] == '20':
             msgId = i[4:]
@@ -108,16 +130,20 @@ def splitBlock4(line):
             doc_b11.text = msgId.strip()
             doc_b21.text = msgId.strip()
             doc_b231.text = msgId.strip()
+
         elif i[1:3] == '21':
             receiverRef = i[4:]
             doc_b238111.text = receiverRef.strip()
+
         elif i[1:3] == '25':
             if i[3:4] == '':
                 accCode = i[4:]
                 doc_b22111.text = accCode.strip()
+
             elif i[3:4] == 'P':
                 accCode = i[4:]
                 doc_b22111.text = accCode.strip()
+
         elif i[1:3] == '13':
             datetime = ('20' + i[5:7]
                         + '-' + i[7:9]
@@ -127,6 +153,7 @@ def splitBlock4(line):
                         + ':00.000' + i[15:18]
                         + ':' + i[18:20])
             doc_b2351.text = datetime.strip()
+
         elif i[1:3] == '32':
             date = ('20' + i[5:7]
                     + '-' + i[7:9]
@@ -140,6 +167,7 @@ def splitBlock4(line):
             doc_b232.set('Ccy', currency)
             doc_b23812.text = amount.strip()
             doc_b23812.set('Ccy', currency)
+
         elif i[1:3] == '50':
             if i[3:4] == 'A':
                 doc_b238141 = ET.SubElement(doc_b23814, 'Dbtr')
@@ -156,6 +184,7 @@ def splitBlock4(line):
                 idCode = splitPart[1]
                 doc_b2381411111.text = idCode.strip()
                 doc_b238142111.text = accountId.strip()
+
             elif i[3:4] == 'K':
                 doc_b238141 = ET.SubElement(doc_b23814, 'Dbtr')
                 doc_b2381411 = ET.SubElement(doc_b238141, 'Pty')
@@ -173,19 +202,24 @@ def splitBlock4(line):
                 splitPart2 = partyIdentifier.split('/')
                 ID = splitPart2[1]
                 doc_b238141111.text = ID.strip()
+
                 for j, part in enumerate(splitPart1):
                     if j == 1:
                         name = part if part else None
                         doc_b23814111.text = name
+
                     elif j == 2:
                         address1 = part if part else None
                         doc_b238141121.text = address1
+
                     elif j == 3:
                         address2 = part if part else None
                         doc_b238141122.text = address2
+
                     elif j == 4:
                         address3 = part if part else None
                         doc_b238141123.text = address3
+
             elif i[3:4] == 'F':
                 doc_b238141 = ET.SubElement(doc_b23814, 'Dbtr')
                 doc_b2381411 = ET.SubElement(doc_b238141, 'Pty')
@@ -222,7 +256,6 @@ def splitBlock4(line):
                 line4 = splitPart1[3]
                 line5 = splitPart1[4]
                 splitPart2 = line1.split('/')
-                print(line1 + '\n' + line2 + '\n' + line3 + '\n' + line4 + '\n' + line5)
 
         elif i[1:3] == '52':
             if i[3:4] == 'A':
@@ -233,11 +266,14 @@ def splitBlock4(line):
                 partyIdentifier = splitPart1[0].split(":")[2]
                 splitPart2 = partyIdentifier.split('/')
                 idCode = splitPart1[1]
+
                 for j, part in enumerate(splitPart2):
                     if j == 2:
                         partyID = part if part else None
                         doc_b23815111.text = partyID.strip()
+
                 doc_b238151121.text = idCode.strip()
+
             elif i[3:4] == 'D':
                 doc_b23815111 = ET.SubElement(doc_b2381511, 'Nm')
                 doc_b23815112 = ET.SubElement(doc_b2381511, 'PstlAdr')
@@ -249,21 +285,27 @@ def splitBlock4(line):
                 splitPart1 = i.split("\n")
                 partyIdentifier = splitPart1[0].split(":")[2]
                 splitPart2 = partyIdentifier.split('/')
+
                 for j, part in enumerate(splitPart1):
                     if j == 1:
                         name = part if part else None
                         doc_b23815111.text = name
+
                     elif j == 2:
                         address1 = part if part else None
                         doc_b238151121.text = address1
+
                     elif j == 3:
                         address2 = part if part else None
                         doc_b238151122.text = address2
+
                     elif j == 4:
                         address3 = part if part else None
                         doc_b238151123.text = address3
+
                 partyID = splitPart2[2]
                 doc_b238151131.text = partyID
+
         elif i[1:3] == '56':
             if i[3:4] == 'A':
                 doc_b23815211 = ET.SubElement(doc_b2381521, 'BICFI')
@@ -273,11 +315,14 @@ def splitBlock4(line):
                 partyIdentifier = splitPart1[0].split(":")[2]
                 splitPart2 = partyIdentifier.split('/')
                 idCode = splitPart1[1]
+
                 for j, part in enumerate(splitPart2):
                     if j == 2:
                         partyID = part if part else None
                         doc_b23815211.text = partyID.strip()
+
                 doc_b238152121.text = idCode.strip()
+
             elif i[3:4] == 'D':
                 doc_b23815211 = ET.SubElement(doc_b2381521, 'Nm')
                 doc_b23815212 = ET.SubElement(doc_b2381521, 'PstlAdr')
@@ -299,6 +344,7 @@ def splitBlock4(line):
                 doc_b238152122.text = address2
                 doc_b238152123.text = address3
                 doc_b23815211.text = name
+
         elif i[1:3] == '72':
             additionalInfo = i[4:]
             doc_b24.text = additionalInfo.replace('\n', '')
@@ -306,19 +352,24 @@ def splitBlock4(line):
 
 def splitBlock5(line):
     block5 = re.findall(r'{([^{}]+)}', line[-1])
+
     for i in block5:
         if i[0:3] == 'CHK':
             checkSum = i[4:]
+
         elif i[0:2] == 'TNG':
             msg = i[3:]
+
         elif i[0:2] == 'PDE':
             time = i[3:7]
             date = i[7:13]
             BIC12 = i[13:25]
             sessionDigit = i[25:29]
             sequenceDigit = i[29:35]
+
         elif i[0:2] == 'DLM':
             msg = i[3:]
+
         elif i[0:2] == 'MRF':
             date1 = i[3:9]
             time = i[9:13]
@@ -326,12 +377,14 @@ def splitBlock5(line):
             BIC12 = i[19:31]
             sessionDigit = i[31:35]
             sequenceDigit = i[35:41]
+
         elif i[0:2] == 'PDM':
             time = i[3:7]
             date = i[7:13]
             BIC12 = i[13:25]
             sessionDigit = i[25:29]
             sequenceDigit = i[29:35]
+
         elif i[0:2] == 'SYS':
             time = i[3:7]
             date = i[7:13]

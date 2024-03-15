@@ -15,33 +15,37 @@ def readFile():
 
 def mapping():
     line = readFile()
+
     splitBlock1(line)
     splitBlock2(line)
     splitBlock3(line)
     splitBlock4(line)
     splitBlock5(line)
+
     timezone = pytz.timezone('Etc/GMT+7')
     currentTime = datetime.datetime.now(timezone)
     formattedTime = currentTime.strftime("%Y-%m-%dT%H:%M:%S.%f%z")
+
     header.set('xmlns', "urn:iso:std:iso:20022:tech:xsd:head.001.001.02")
     doc.set('xmlns', "urn:iso:std:iso:20022:tech:xsd:camt.054.001.08")
+
     header_b4.text = 'camt.054.001.08'
     header_b5.text = 'swift.cbprplus.02'
     header_b6.text = formattedTime.strip()
     doc_b12.text = formattedTime.strip()
 
-
-if __name__ == '__main__':
-    mapping()
     xml_header = ET.tostring(header, encoding="utf-8", xml_declaration=True).decode('utf-8')
     xml_doc = ET.tostring(doc, encoding="utf-8", xml_declaration=True).decode('utf-8')
     dom1 = xml.dom.minidom.parseString(xml_header)
     dom2 = xml.dom.minidom.parseString(xml_doc)
     header_xml = dom1.toprettyxml(indent="  ")
     doc_xml = dom2.toprettyxml(indent="  ")
-    # with open("new_file.xml", "w") as file:
-    #     file.write(header_xml + '\n' + doc_xml)
-    print(header_xml + '\n' + doc_xml)
+    with open("new_file.xml", "w") as file:
+        file.write(header_xml + '\n' + doc_xml)
+
+
+if __name__ == '__main__':
+    mapping()
     window = Tk()
     button = Button(text="open", command=readFile)
     button.pack()
