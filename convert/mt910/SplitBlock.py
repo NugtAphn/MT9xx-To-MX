@@ -112,8 +112,12 @@ def splitBlock4(line):
             receiverRef = i[4:]
             doc_b238111.text = receiverRef.strip()
         elif i[1:3] == '25':
-            accCode = i[4:]
-            doc_b22111.text = accCode.strip()
+            if i[3:4] == '':
+                accCode = i[4:]
+                doc_b22111.text = accCode.strip()
+            elif i[3:4] == 'P':
+                accCode = i[4:]
+                doc_b22111.text = accCode.strip()
         elif i[1:3] == '13':
             datetime = ('20' + i[5:7]
                         + '-' + i[7:9]
@@ -128,7 +132,7 @@ def splitBlock4(line):
                     + '-' + i[7:9]
                     + '-' + i[9:11])
             currency = i[11:14]
-            amount = i[14:-2]
+            amount = i[14:-1]
             doc_b2361.text = date.strip()
             doc_b238161.text = date.strip()
             doc_b222.text = currency.strip()
@@ -152,6 +156,36 @@ def splitBlock4(line):
                 idCode = splitPart[1]
                 doc_b2381411111.text = idCode.strip()
                 doc_b238142111.text = accountId.strip()
+            elif i[3:4] == 'K':
+                doc_b238141 = ET.SubElement(doc_b23814, 'Dbtr')
+                doc_b2381411 = ET.SubElement(doc_b238141, 'Pty')
+                doc_b23814111 = ET.SubElement(doc_b2381411, 'Nm')
+                doc_b23814112 = ET.SubElement(doc_b2381411, 'PstlAdr')
+                doc_b238141121 = ET.SubElement(doc_b23814112, 'AdrLine')
+                doc_b238141122 = ET.SubElement(doc_b23814112, 'AdrLine')
+                doc_b238141123 = ET.SubElement(doc_b23814112, 'AdrLine')
+                doc_b238142 = ET.SubElement(doc_b23814, 'DbtrAcct')
+                doc_b2381421 = ET.SubElement(doc_b238142, 'Id')
+                doc_b23814211 = ET.SubElement(doc_b2381421, 'Othr')
+                doc_b238141111 = ET.SubElement(doc_b23814211, 'Id')
+                splitPart1 = i.split("\n")
+                partyIdentifier = splitPart1[0].split(":")[2]
+                splitPart2 = partyIdentifier.split('/')
+                ID = splitPart2[1]
+                doc_b238141111.text = ID.strip()
+                for j, part in enumerate(splitPart1):
+                    if j == 1:
+                        name = part if part else None
+                        doc_b23814111.text = name
+                    elif j == 2:
+                        address1 = part if part else None
+                        doc_b238141121.text = address1
+                    elif j == 3:
+                        address2 = part if part else None
+                        doc_b238141122.text = address2
+                    elif j == 4:
+                        address3 = part if part else None
+                        doc_b238141123.text = address3
             elif i[3:4] == 'F':
                 doc_b238141 = ET.SubElement(doc_b23814, 'Dbtr')
                 doc_b2381411 = ET.SubElement(doc_b238141, 'Pty')
@@ -181,11 +215,14 @@ def splitBlock4(line):
                 doc_b238142111 = ET.SubElement(doc_b23814211, 'Id')
                 doc_b23814212 = ET.SubElement(doc_b2381421, 'Othr')
                 doc_b238142121 = ET.SubElement(doc_b23814212, 'Id')
-                splitPart1 = i.split("\n")
-                partyIdentifier = splitPart1[0].split(":")[2]
-                splitPart2 = partyIdentifier.split('/')
-                idCode = splitPart1[1]
-                parID = splitPart2[2]
+                splitPart1 = i.split('\n')
+                line1 = splitPart1[0].split(':')[2]
+                line2 = splitPart1[1]
+                line3 = splitPart1[2]
+                line4 = splitPart1[3]
+                line5 = splitPart1[4]
+                splitPart2 = line1.split('/')
+                print(line1 + '\n' + line2 + '\n' + line3 + '\n' + line4 + '\n' + line5)
 
         elif i[1:3] == '52':
             if i[3:4] == 'A':
@@ -196,8 +233,10 @@ def splitBlock4(line):
                 partyIdentifier = splitPart1[0].split(":")[2]
                 splitPart2 = partyIdentifier.split('/')
                 idCode = splitPart1[1]
-                partyID = splitPart2[2]
-                doc_b23815111.text = partyID.strip()
+                for j, part in enumerate(splitPart2):
+                    if j == 2:
+                        partyID = part if part else None
+                        doc_b23815111.text = partyID.strip()
                 doc_b238151121.text = idCode.strip()
             elif i[3:4] == 'D':
                 doc_b23815111 = ET.SubElement(doc_b2381511, 'Nm')
@@ -234,8 +273,10 @@ def splitBlock4(line):
                 partyIdentifier = splitPart1[0].split(":")[2]
                 splitPart2 = partyIdentifier.split('/')
                 idCode = splitPart1[1]
-                partyID = splitPart2[2]
-                doc_b23815211.text = partyID.strip()
+                for j, part in enumerate(splitPart2):
+                    if j == 2:
+                        partyID = part if part else None
+                        doc_b23815211.text = partyID.strip()
                 doc_b238152121.text = idCode.strip()
             elif i[3:4] == 'D':
                 doc_b23815211 = ET.SubElement(doc_b2381521, 'Nm')
