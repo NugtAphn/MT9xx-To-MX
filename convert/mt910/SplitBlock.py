@@ -176,7 +176,11 @@ def splitBlock4(line):
                     + '-' + i[7:9]
                     + '-' + i[9:11])
             currency = i[11:14]
-            amount = i[14:-1]
+
+            if i[-2:-1] == ',':
+                amount = i[14:-2]
+            else:
+                amount = i[14:-1]
 
             doc_b2361.text = date.strip()
             doc_b238161.text = date.strip()
