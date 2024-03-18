@@ -56,7 +56,12 @@ def splitBlock2(line):
             elif priority == 'N':
                 header_b7.text = 'NORM'
 
-
+    for i in block2:
+        if i[3:6] == '910':
+            doc_b2341.text = 'BOOK'
+            doc_b23711.text = 'PMNT'
+            doc_b237121.text = 'MDOP'
+            doc_b237122.text = 'NTAV'
 
 def splitBlock3(line):
     tags = ['103', '113', '108', '119', '423',
@@ -143,7 +148,7 @@ def splitBlock4(line):
             doc_b238111.text = receiverRef.strip()
 
         elif i[1:3] == '25':
-            if i[3:4] == '':
+            if i[3:4] == ':':
                 accCode = i[4:]
                 doc_b22111.text = accCode.strip()
 
@@ -189,6 +194,8 @@ def splitBlock4(line):
             doc_b232.set('Ccy', currency)
             doc_b23812.text = amount.strip()
             doc_b23812.set('Ccy', currency)
+            doc_b23813.text = 'CRDT'
+            doc_b233.text = 'CRDT'
 
         elif i[1:3] == '50':
             if i[3:4] == 'A':
@@ -267,8 +274,14 @@ def splitBlock4(line):
                 doc_b2381411323 = ET.SubElement(doc_b238141132, 'Issr')
                 doc_b238141133 = ET.SubElement(doc_b23814113, 'Othr')
                 doc_b2381411331 = ET.SubElement(doc_b238141133, 'Id')
-                doc_b2381411332 = ET.SubElement(doc_b2381411331, 'SchmeNm')
+                doc_b2381411332 = ET.SubElement(doc_b238141133, 'SchmeNm')
                 doc_b23814113321 = ET.SubElement(doc_b2381411332, 'Cd')
+                doc_b2381411333 = ET.SubElement(doc_b238141133, 'Issr')
+                doc_b238141134 = ET.SubElement(doc_b23814113, 'Othr')
+                doc_b2381411341 = ET.SubElement(doc_b238141134, 'Id')
+                doc_b2381411342 = ET.SubElement(doc_b238141134, 'SchmeNm')
+                doc_b23814113421 = ET.SubElement(doc_b2381411342, 'Cd')
+                doc_b2381411343 = ET.SubElement(doc_b238141134, 'Issr')
                 doc_b238142 = ET.SubElement(doc_b23814, 'DbtrAcct')
                 doc_b2381421 = ET.SubElement(doc_b238142, 'Id')
                 doc_b23814211 = ET.SubElement(doc_b2381421, 'IBAN')
@@ -282,7 +295,154 @@ def splitBlock4(line):
                 line3 = splitPart1[2]
                 line4 = splitPart1[3]
                 line5 = splitPart1[4]
+
                 splitPart2 = line1.split('/')
+                splitPart3 = line2.split('/')
+                splitPart4 = line3.split('/')
+                splitPart5 = line4.split('/')
+                splitPart6 = line5.split('/')
+
+                line1 = splitPart2[1]
+                line2 = splitPart3[1]
+
+                if splitPart1[0].split(':')[2][0] == '/':
+                    mainID = splitPart1[0].split(':')[2][1:]
+                    doc_b238142121.text = mainID.strip()
+                    doc_b23814111.text = line2.strip()
+
+                    if splitPart4[0] == '2':
+                        line3 = splitPart4[1]
+                        doc_b238141123.text = line3.strip()
+                        country = splitPart5[1]
+                        townName = splitPart5[2]
+                        doc_b238141122.text = country.strip()
+                        doc_b238141121.text = townName.strip()
+
+                        if splitPart6[0] == '6':
+                            ID = splitPart6[3] if splitPart6[3] else None
+                            issue = splitPart6[2] if splitPart6[3] else None
+                            doc_b23814113321.text = 'CUST'
+                            doc_b2381411333.text = issue.strip()
+                            doc_b2381411331.text = ID.strip()
+
+                        elif splitPart6[0] == '7':
+                            ID = splitPart6[2] if splitPart6[2] else None
+                            doc_b23814113421.text = 'NIDN'
+                            doc_b2381411341.text = ID.strip()
+
+                    elif splitPart4[0] == '3':
+                        country = splitPart4[1]
+                        townName = splitPart4[2]
+                        doc_b238141122.text = country.strip()
+                        doc_b238141121.text = townName.strip()
+
+                        if splitPart5[0] == '4' and splitPart6[0] == '5':
+                            birthDate = splitPart5[1]
+                            city = splitPart6[2]
+                            country = splitPart6[1]
+                            doc_b23814113111.text = birthDate.strip()
+                            doc_b23814113112.text = city.strip()
+                            doc_b23814113113.text = country.strip()
+                        elif splitPart5[0] == '6':
+                            ID6 = splitPart5[3] if splitPart5[3] else None
+                            issue = splitPart5[2] if splitPart5[3] else None
+                            doc_b23814113321.text = 'CUST'
+                            doc_b2381411333.text = issue.strip()
+                            doc_b2381411331.text = ID6.strip()
+
+                            if splitPart6[0] == '7':
+                                ID = splitPart6[2] if splitPart6[2] else None
+                                doc_b23814113421.text = 'NIDN'
+                                doc_b2381411341.text = ID.strip()
+
+                            elif splitPart6[0] == '8':
+                                val8 = splitPart6[1]
+                                finalID = ID6 + val8
+                                doc_b2381411331.text = finalID.strip()
+
+                        elif splitPart5[0] == '7':
+                            ID7 = splitPart5[2] if splitPart5[2] else None
+                            doc_b23814113421.text = 'NIDN'
+                            doc_b2381411341.text = ID7.strip()
+
+                            if splitPart6[0] == '8':
+                                val8 = splitPart6[1]
+                                finalID = ID7 + val8
+                                doc_b2381411331.text = finalID.strip()
+
+                else:
+                    code = splitPart2[0]
+                    issue = splitPart2[1] + '/' + splitPart2[2] if splitPart2[1] + '/' + splitPart2[2] else None
+                    mainID = splitPart2[3] if splitPart2[3] else None
+                    doc_b23814113221.text = code.strip()
+                    doc_b2381411323.text = issue.strip()
+                    doc_b2381411321.text = mainID.strip()
+                    doc_b23814111.text = line2.strip()
+
+                    if splitPart4[0] == '2':
+                        line3 = splitPart4[1]
+                        doc_b238141123.text = line3.strip()
+                        country = splitPart5[1]
+                        townName = splitPart5[2]
+                        doc_b238141122.text = country.strip()
+                        doc_b238141121.text = townName.strip()
+
+                        if splitPart6[0] == '6':
+                            ID = splitPart6[3] if splitPart6[3] else None
+                            issue = splitPart6[2] if splitPart6[3] else None
+                            doc_b23814113321.text = 'CUST'
+                            doc_b2381411333.text = issue.strip()
+                            doc_b2381411331.text = ID.strip()
+
+                        elif splitPart6[0] == '7':
+                            ID = splitPart6[2] if splitPart6[2] else None
+                            doc_b23814113421.text = 'NIDN'
+                            doc_b2381411341.text = ID.strip()
+
+                        elif splitPart6[0] == '8':
+                            val8 = splitPart6[1]
+                            finalID = mainID + val8
+                            doc_b2381411331.text = finalID.strip()
+
+                    elif splitPart4[0] == '3':
+                        country = splitPart4[1]
+                        townName = splitPart4[2]
+                        doc_b238141122.text = country.strip()
+                        doc_b238141121.text = townName.strip()
+
+                        if splitPart5[0] == '4' and splitPart6[0] == '5':
+                            birthDate = splitPart5[1]
+                            city = splitPart6[2]
+                            country = splitPart6[1]
+                            doc_b23814113111.text = birthDate.strip()
+                            doc_b23814113112.text = city.strip()
+                            doc_b23814113113.text = country.strip()
+                        elif splitPart5[0] == '6':
+                            ID6 = splitPart5[3] if splitPart5[3] else None
+                            issue = splitPart5[2] if splitPart5[3] else None
+                            doc_b23814113321.text = 'CUST'
+                            doc_b2381411333.text = issue.strip()
+                            doc_b2381411331.text = ID6.strip()
+
+                            if splitPart6[0] == '7':
+                                ID = splitPart6[2] if splitPart6[2] else None
+                                doc_b23814113421.text = 'NIDN'
+                                doc_b2381411341.text = ID.strip()
+
+                            elif splitPart6[0] == '8':
+                                val8 = splitPart6[1]
+                                finalID = ID6 + val8
+                                doc_b2381411331.text = finalID.strip()
+
+                        elif splitPart5[0] == '7':
+                            ID7 = splitPart5[2] if splitPart5[2] else None
+                            doc_b23814113421.text = 'NIDN'
+                            doc_b2381411341.text = ID7.strip()
+
+                            if splitPart6[0] == '8':
+                                val8 = splitPart6[1]
+                                finalID = ID7 + val8
+                                doc_b2381411331.text = finalID.strip()
 
         elif i[1:3] == '52':
             if i[3:4] == 'A':
@@ -299,9 +459,9 @@ def splitBlock4(line):
                 for j, part in enumerate(splitPart2):
                     if j == 2:
                         partyID = part if part else None
-                        doc_b23815111.text = partyID.strip()
+                        doc_b238151121.text = partyID.strip()
 
-                doc_b238151121.text = idCode.strip()
+                doc_b23815111.text = idCode.strip()
 
             elif i[3:4] == 'D':
                 doc_b23815111 = ET.SubElement(doc_b2381511, 'Nm')
@@ -352,9 +512,9 @@ def splitBlock4(line):
                 for j, part in enumerate(splitPart2):
                     if j == 2:
                         partyID = part if part else None
-                        doc_b23815211.text = partyID.strip()
+                        doc_b238152121.text = partyID.strip()
 
-                doc_b238152121.text = idCode.strip()
+                doc_b23815211.text = idCode.strip()
 
             elif i[3:4] == 'D':
                 doc_b23815211 = ET.SubElement(doc_b2381521, 'Nm')

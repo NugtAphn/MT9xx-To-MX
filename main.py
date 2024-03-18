@@ -32,8 +32,23 @@ def mapping():
     header_b6.text = formattedTime.strip()
     doc_b12.text = formattedTime.strip()
 
-    xml_header = ET.tostring(header, encoding="utf-8", xml_declaration=True).decode('utf-8')
-    xml_doc = ET.tostring(doc, encoding="utf-8", xml_declaration=True).decode('utf-8')
+    nodes_to_remove = []
+
+    # Duyệt cây Element Tree theo chiều sâu trước (pre-order traversal)
+    for elem in header.iter():
+        # Kiểm tra nút có giá trị văn bản không
+        if elem.text is None and len(elem) == 0:
+            # Thêm nút vào danh sách cần xóa
+            nodes_to_remove.append(elem)
+
+    # Xóa các nút trong danh sách khỏi cây Element Tree
+    for node in nodes_to_remove:
+        parent = node.getparent()
+        if parent is not None:
+            parent.remove(node)
+
+    xml_header = ET.tostring(header, encoding="unicode", )
+    xml_doc = ET.tostring(doc, encoding="unicode")
 
     dom1 = xml.dom.minidom.parseString(xml_header)
     dom2 = xml.dom.minidom.parseString(xml_doc)
