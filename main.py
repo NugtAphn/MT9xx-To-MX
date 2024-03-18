@@ -1,5 +1,6 @@
 import xml.dom.minidom
 import datetime
+import sys
 from tkinter import *
 from tkinter import filedialog
 from convert.mt910.SplitBlock import *
@@ -12,12 +13,15 @@ def readFile():
     return read
 
 
-def remove_empty_parents(elem):
-    if len(elem) == 0 and elem.text is None or elem.text.strip() == '':
-        parent = elem.getparent()
+def remove_empty_elements(element):
+    for child in list(element):
+        remove_empty_elements(child)
+        if child.text is None and len(child) == 0:
+            element.remove(child)
+    if element.text is None and len(element) == 0:
+        parent = element.find("..")
         if parent is not None:
-            parent.remove(elem)
-            remove_empty_parents(parent)
+            parent.remove(element)
 
 
 def mapping():
@@ -43,17 +47,22 @@ def mapping():
     xml_header = ET.tostring(header, encoding="unicode", )
     xml_doc = ET.tostring(doc, encoding="unicode")
 
-    dom1 = xml.dom.minidom.parseString(xml_header)
-    dom2 = xml.dom.minidom.parseString(xml_doc)
+    sys.setrecursionlimit(10000)
+
+    xmlHeader = ET.fromstring(xml_header)
+    xmlDoc = ET.fromstring(xml_doc)
+
+    remove_empty_elements(xmlHeader)
+    remove_empty_elements(xmlDoc)
+
+    headerXML = ET.tostring(xmlHeader)
+    docXML = ET.tostring(xmlDoc)
+
+    dom1 = xml.dom.minidom.parseString(headerXML)
+    dom2 = xml.dom.minidom.parseString(docXML)
 
     header_xml = dom1.toprettyxml(indent="  ")
     doc_xml = dom2.toprettyxml(indent="  ")
-
-    # root1 = ET.fromstring(header_xml)
-    # root2 = ET.fromstring(doc_xml)
-    #
-    # for elem in root1.iter():
-    #     remove_empty_parents(elem)
 
     with open("acmt.054.001.08.xml", "w") as file:
         file.write(header_xml + '\n' + doc_xml)
