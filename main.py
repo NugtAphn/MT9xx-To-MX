@@ -12,6 +12,14 @@ def readFile():
     return read
 
 
+def remove_empty_parents(elem):
+    if len(elem) == 0 and elem.text is None or elem.text.strip() == '':
+        parent = elem.getparent()
+        if parent is not None:
+            parent.remove(elem)
+            remove_empty_parents(parent)
+
+
 def mapping():
     line = readFile()
 
@@ -32,21 +40,6 @@ def mapping():
     header_b6.text = formattedTime.strip()
     doc_b12.text = formattedTime.strip()
 
-    nodes_to_remove = []
-
-    # Duyệt cây Element Tree theo chiều sâu trước (pre-order traversal)
-    for elem in header.iter():
-        # Kiểm tra nút có giá trị văn bản không
-        if elem.text is None and len(elem) == 0:
-            # Thêm nút vào danh sách cần xóa
-            nodes_to_remove.append(elem)
-
-    # Xóa các nút trong danh sách khỏi cây Element Tree
-    for node in nodes_to_remove:
-        parent = node.getparent()
-        if parent is not None:
-            parent.remove(node)
-
     xml_header = ET.tostring(header, encoding="unicode", )
     xml_doc = ET.tostring(doc, encoding="unicode")
 
@@ -55,6 +48,12 @@ def mapping():
 
     header_xml = dom1.toprettyxml(indent="  ")
     doc_xml = dom2.toprettyxml(indent="  ")
+
+    # root1 = ET.fromstring(header_xml)
+    # root2 = ET.fromstring(doc_xml)
+    #
+    # for elem in root1.iter():
+    #     remove_empty_parents(elem)
 
     with open("acmt.054.001.08.xml", "w") as file:
         file.write(header_xml + '\n' + doc_xml)

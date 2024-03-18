@@ -17,7 +17,7 @@
   <BizMsgIdr>02569</BizMsgIdr>
   <MsgDefIdr>camt.054.001.08</MsgDefIdr>
   <BizSvc>swift.cbprplus.02</BizSvc>
-  <CreDt>2024-03-18T14:03:15.024905</CreDt>
+  <CreDt>2024-03-18T15:07:36.137421</CreDt>
   <Prty>NORM</Prty>
 </AppHdr>
 
@@ -26,7 +26,7 @@
   <BkToCstmrDbtCdtNtfctn>
     <GrpHdr>
       <MsgId>02569</MsgId>
-      <CreDtTm>2024-03-18T14:03:15.024905</CreDtTm>
+      <CreDtTm>2024-03-18T15:07:36.137421</CreDtTm>
     </GrpHdr>
     <Ntfctn>
       <Id>02569</Id>
@@ -78,18 +78,10 @@
                   </PstlAdr>
                   <Id>
                     <PrvtId>
-                      <DtAndPlcOfBirth>
-                        <BirthDt/>
-                        <CityOfBirth/>
-                        <CtryOfBirth/>
-                      </DtAndPlcOfBirth>
+                      <DtAndPlcOfBirth/>
                     </PrvtId>
                     <Othr>
-                      <Id/>
-                      <SchmeNm>
-                        <Cd/>
-                      </SchmeNm>
-                      <Issr/>
+                      <SchmeNm/>
                     </Othr>
                     <Othr>
                       <Id>1234578293</Id>
@@ -99,20 +91,14 @@
                       <Issr>ABC BANK</Issr>
                     </Othr>
                     <Othr>
-                      <Id/>
-                      <SchmeNm>
-                        <Cd/>
-                      </SchmeNm>
-                      <Issr/>
+                      <SchmeNm/>
                     </Othr>
                   </Id>
                 </Pty>
               </Dbtr>
               <DbtrAcct>
                 <Id>
-                  <IBAN>
-                    <Id/>
-                  </IBAN>
+                  <IBAN/>
                   <Othr>
                     <Id>aaaaaaaaaaa</Id>
                   </Othr>
