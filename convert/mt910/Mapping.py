@@ -5,7 +5,7 @@ from common.reformatXML import *
 import xml.dom.minidom
 
 
-def mapping(line):
+def mapping910(line):
     splitBlock1(line)
     splitBlock2(line)
     splitBlock3(line)

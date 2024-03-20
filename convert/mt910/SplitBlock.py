@@ -62,6 +62,7 @@ def splitBlock2(line):
             doc_b23711.text = 'PMNT'
             doc_b237121.text = 'MDOP'
             doc_b237122.text = 'NTAV'
+            
 
 def splitBlock3(line):
     tags = ['103', '113', '108', '119', '423',
@@ -153,10 +154,10 @@ def splitBlock4(line):
                 doc_b22111.text = accCode.strip()
 
             elif i[3:4] == 'P':
-                # doc_b223 = ET.SubElement(doc_b22, 'Ownr')
-                # doc_b2231 = ET.SubElement(doc_b223, 'Id')
-                # doc_b22311 = ET.SubElement(doc_b2231, 'OrgId')
-                # doc_b223111 = ET.SubElement(doc_b22311, 'AnyBIC')
+                doc_b223 = ET.SubElement(doc_b22, 'Ownr')
+                doc_b2231 = ET.SubElement(doc_b223, 'Id')
+                doc_b22311 = ET.SubElement(doc_b2231, 'OrgId')
+                doc_b223111 = ET.SubElement(doc_b22311, 'AnyBIC')
                 splitPart = i.split("\n")
                 ID = splitPart[0].split(":")[2]
                 IDCode = splitPart[1]
