@@ -13,5 +13,13 @@ def chooseFile():
             block.append(i[:])
 
     for i in block:
-        if i[3:6] == '910':
+        if i[3:6] == '900':
+            print('Not Done Yet')
+        elif i[3:6] == '910':
             mapping910(line)
+        elif i[3:6] == '940':
+            print('Not Done Yet')
+        elif i[3:6] == '942':
+            print('Not Done Yet')
+        elif i[3:6] == '950':
+            print('Not Done Yet')

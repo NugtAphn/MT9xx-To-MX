@@ -17,7 +17,7 @@
   <BizMsgIdr>02569</BizMsgIdr>
   <MsgDefIdr>camt.054.001.08</MsgDefIdr>
   <BizSvc>swift.cbprplus.02</BizSvc>
-  <CreDt>2024-03-20T13:54:44.868475</CreDt>
+  <CreDt>2024-03-20T14:01:33.524169</CreDt>
   <Prty>NORM</Prty>
 </AppHdr>
 
@@ -26,7 +26,7 @@
   <BkToCstmrDbtCdtNtfctn>
     <GrpHdr>
       <MsgId>02569</MsgId>
-      <CreDtTm>2024-03-20T13:54:44.868475</CreDtTm>
+      <CreDtTm>2024-03-20T14:01:33.524169</CreDtTm>
     </GrpHdr>
     <Ntfctn>
       <Id>02569</Id>
