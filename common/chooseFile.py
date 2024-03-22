@@ -1,6 +1,7 @@
 import re
 from common.readFile import *
 from convert.mt910.Mapping import mapping910
+from convert.mt950.Mapping import mapping950
 
 
 def chooseFile():
@@ -22,4 +23,4 @@ def chooseFile():
         elif i[3:6] == '942':
             print('Not Done Yet')
         elif i[3:6] == '950':
-            print('Not Done Yet')
+            mapping950(line)

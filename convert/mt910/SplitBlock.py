@@ -1,6 +1,6 @@
 import re
-from tree.mt910.Header import *
 from tree.mt910.Body import *
+from tree.mt910.Header import *
 
 
 def splitBlock1(line):
