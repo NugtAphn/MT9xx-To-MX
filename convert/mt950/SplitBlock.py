@@ -119,7 +119,7 @@ def splitBlock3(line):
 
 
 def splitBlock4(line):
-    tags = ['20', '25', '28C', '60', '61',
+    tags = ['20', '25', '28', '60', '61',
             '62', '64']
     characters = ['{', ':', '-']
     block4 = []
@@ -131,7 +131,42 @@ def splitBlock4(line):
         elif i[0] not in characters:
             if len(block4) != 0:
                 block4[-1] += i
-    print(block4)
+
+    count = 0
+    for val in block4:
+        if val[1:3] == '61':
+            count += 1
+
+    for i in block4:
+        if i[1:3] == '20':
+            msgId = i[4:]
+            header_b3.text = msgId.strip()
+            doc_b11.text = msgId.strip()
+            doc_b21.text = msgId.strip()
+
+        elif i[1:3] == '25':
+            accID = i[4:]
+            doc_b210121.text = accID.strip()
+
+        elif i[1:4] == '28C':
+            splitPart = i.split(':')[2]
+
+            if '/' in splitPart:
+                seqNb = splitPart.split('/')[0] if splitPart.split('/')[0] else None
+                pgNb = splitPart.split('/')[1] if splitPart.split('/')[1] else None
+                doc_b23.text = seqNb.strip()
+                doc_b221.text = pgNb.strip()
+            else:
+                seqNb = i[5:]
+                doc_b23.text = seqNb.strip()
+
+
+        # elif i[1:3] == '60':
+        #     if i[3:4] == 'F':
+        #
+        #
+        #     elif i[3:4] == 'M':
+
 
 
 def splitBlock5(line):
