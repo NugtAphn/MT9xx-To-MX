@@ -18,17 +18,22 @@
     <BizMsgIdr>02700</BizMsgIdr>
     <MsgDefIdr>camt.053.001.12</MsgDefIdr>
     <BizSvc>swift.cbprplus.02</BizSvc>
-    <MktPrctc>2024-03-22T16:04:25.529722</MktPrctc>
+    <MktPrctc>2024-03-22T16:32:42.513412</MktPrctc>
     <CreDt>NORM</CreDt>
   </AppHdr>
   <Document>
     <BkToCstmrDbtCdtNtfctn>
       <GrpHdr>
         <MsgId>02700</MsgId>
-        <CreDtTm>2024-03-22T16:04:25.529722</CreDtTm>
+        <CreDtTm>2024-03-22T16:32:42.513412</CreDtTm>
       </GrpHdr>
       <Stmt>
         <Id>02700</Id>
+        <StmtPgntn>
+          <PgNb>9</PgNb>
+          <LastPgInd>true</LastPgInd>
+        </StmtPgntn>
+        <ElctrncSeqNb>00200</ElctrncSeqNb>
         <Acct>
           <Id>
             <Othr>

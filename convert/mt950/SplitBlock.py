@@ -156,9 +156,12 @@ def splitBlock4(line):
                 pgNb = splitPart.split('/')[1] if splitPart.split('/')[1] else None
                 doc_b23.text = seqNb.strip()
                 doc_b221.text = pgNb.strip()
+                doc_b222.text = 'true'
             else:
                 seqNb = i[5:]
                 doc_b23.text = seqNb.strip()
+                doc_b221.text = '1'
+                doc_b222.text = 'true'
 
 
         # elif i[1:3] == '60':
