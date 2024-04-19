@@ -1,10 +1,8 @@
 from common.chooseFile import *
-from tkinter import *
-
+from common.connectDB import *
 
 if __name__ == '__main__':
+    connect()
     chooseFile()
-    window = Tk()
-    button = Button(text="open", command=readFile)
-    button.pack()
-    window.mainloop()
+
+
