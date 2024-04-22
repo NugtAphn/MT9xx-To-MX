@@ -17,16 +17,14 @@
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="cd59bbf3-6367-4d01-a21a-3d16a58a3663">
-      <console name="HR Schema Console" type="STANDARD" schema="HR" session="Main"><![CDATA[select * from EMPLOYEES]]></console>
+      <console name="HR Schema Console" type="STANDARD" schema="HR" session="Main" />
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">
     <last-used-providers />
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files>
-      <object connection-id="cd59bbf3-6367-4d01-a21a-3d16a58a3663" object-ref="consoles/HR Schema Console" />
-    </open-files>
+    <open-files />
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="cd59bbf3-6367-4d01-a21a-3d16a58a3663" />
